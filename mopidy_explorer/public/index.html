@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mopidy HTTP frontend</title>
+    <link
+            href="//maxcdn.bootstrapcdn.com/bootswatch/3.1.1/yeti/bootstrap.min.css"
+            rel="stylesheet">
+    <style>
+        body {
+            margin-top: 50px;
+        }
+
+        @media (max-width: 991px) {
+            .bs-sidebar.affix {
+                position: static !important
+            }
+        }
+
+        .bs-sidenav {
+            margin-top: 40px;
+            margin-bottom: 20px;
+            width: 180px
+        }
+
+        .bs-sidebar .nav > li > a {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #999;
+            padding: 4px 15px;
+            text-align: right
+        }
+
+        .bs-sidebar .nav > li > a:focus, .bs-sidebar .nav > li > a:hover {
+            color: #5980b9;
+            text-decoration: none;
+            background-color: transparent;
+            border-right: 1px solid #5980b9
+        }
+
+        .bs-sidebar .nav > .active:focus > a, .bs-sidebar .nav > .active:hover > a, .bs-sidebar .nav > .active > a {
+            font-weight: 700;
+            color: #5980b9;
+            background-color: transparent;
+            border-right: 2px solid #5980b9
+        }
+
+        .bs-sidebar .nav .nav {
+            display: none;
+        }
+
+        .bs-sidebar .nav .nav > li > a {
+            padding-top: 2px;
+            padding-bottom: 2px;
+            font-size: 12px;
+            font-weight: 400
+        }
+
+
+        .bs-sidebar .nav .nav > .active:focus > a, .bs-sidebar .nav .nav > .active:hover > a, .bs-sidebar .nav .nav > .active > a {
+            font-weight: 500;
+        }
+
+        @media (min-width: 992px) {
+            .bs-sidebar .nav > .active > ul {
+                display: block
+            }
+
+            .bs-sidebar.affix .bs-sidenav, .bs-sidebar.affix-bottom .bs-sidenav {
+                margin-top: 0;
+                margin-bottom: 0
+            }
+        }
+
+    </style>
+</head>
+<body ng-app="api">
+
+<header class="navbar navbar-inverse navbar-fixed-top" role="navigation"
+        bs-navbar>
+
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Mopidy HTTP API</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a data-match-route="api" href="#api">Methods</a></li>
+                <li><a data-match-route="events" href="#events">Events</a></li>
+                <li><a data-match-route="documentation" href="#documentation
+                    ">Documentation</a></li>
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
+    </div>
+
+</header>
+
+<div class="container bs-docs-container" ng-controller="MainCtrl">
+    <div class="row">
+        <div class="col-md-2 hidden-sm hidden-xs">
+            <div>
+                <div class="bs-sidebar hidden-print" role="complementary"
+                     data-offset-top="-100" bs-affix="" bs-scrollspy-list="">
+                    <ul class="nav bs-sidenav">
+                        <li bs-scrollspy=""
+                            data-target="#{{class}}"
+                            ng-repeat="(class, methods) in methods_toc">
+                            <a ng-href="#{{class}}">{{class}}</a>
+                            <ul class="nav" ng-repeat="method in methods">
+                                <li>
+                                    <a ng-href="#{{class}}.{{method}}">{{method}}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+
+            <div class="box focus">
+                <h1>Mopidy HTTP&nbsp;frontend</h1>
+
+                <p>This web server is a part of the music server Mopidy. To
+                    learn more
+                    about Mopidy, please visit <a
+                            href="http://www.mopidy.com/">www.mopidy.com</a>.
+                </p>
+            </div>
+
+            <div class="box">
+                <h2>WebSocket endpoint</h2>
+
+                <p>Mopidy has a WebSocket endpoint at <tt>/mopidy/ws/</tt>. You
+                    can use
+                    this end point to access Mopidy's full API, and to get
+                    notified
+                    about
+                    events happening in Mopidy.</p>
+            </div>
+
+            <div class="box" id="api">
+
+
+                <h2>API Methods</h2>
+                <section id="{{class}}"
+                         ng-repeat="(class, methods) in methods_toc">
+                    <h3>{{class}}</h3>
+
+                    <div ng-repeat="method in methods">
+                        <h4 id="{{class}}.{{method}}"><a ng-href="#{{class}}.{{method}}">instance.{{class}}.{{method}}</a>
+                        </h4>
+                        <h5>cURL</h5>
+                        <pre>{{getCurl(class+'.'+method)}}</pre>
+                        <h5>Description</h5>
+                        <article
+                                ng-bind-html="getIt(class+'.'+method, 'description') | htmlify"></article>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="box" id="events">
+                <h2>Events</h2>
+
+                <p>Here you can see events arriving from Mopidy in real
+                    time:</p>
+
+                <pre id="ws-console"></pre>
+
+                <p>Nothing to see? Try playing a track using your MPD
+                    client.</p>
+            </div>
+
+            <div class="box focus" id="documentation">
+                <h2>Documentation</h2>
+
+                <p>For more information, please refer to the Mopidy
+                    documentation at
+                    <a href="http://docs.mopidy.com/">docs.mopidy.com</a>.</p>
+            </div>
+            <script src="/mopidy/mopidy.js" type="text/javascript"></script>
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.8/angular.min.js"
+                    type="text/javascript"></script>
+            <script src="https://code.angularjs.org/1.3.0-beta.8/angular-sanitize.min.js"
+                    type="text/javascript"></script>
+
+            <script src="strap.js" type="text/javascript"></script>
+            <script src="strap-t.js" type="text/javascript"></script>
+            <script src="app.js" type="text/javascript"></script>
+        </div>
+    </div>
+</div>
+</body>
+</html>
