@@ -16,7 +16,7 @@ Mopidy-API-Explorer
 
 `Mopidy <http://www.mopidy.com/>`_ extension which lets you explore HTTP API.
 
-.. image:: http://drp.io/2h
+.. image:: http://drp.io/files/53a9ad93c2534.png
 
 
 Installation
