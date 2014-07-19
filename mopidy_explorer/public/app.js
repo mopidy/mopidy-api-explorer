@@ -1,9 +1,9 @@
 angular.module('api', [
     'controllers'
-])
+]);
 angular.module('controllers', ['mgcrea.ngStrap'])
     .controller('MainCtrl', function ($scope) {
-        var mopidy = new Mopidy();
+        var mopidy = new Mopidy({callingConvention: "by-position-or-by-name"});
         $scope.methods_toc = {}
         mopidy.on("state:online", function () {
             mopidy._send({method: "core.describe"}).then(function (data) {
@@ -18,6 +18,7 @@ angular.module('controllers', ['mgcrea.ngStrap'])
                         if (item.length == 1) {
                             item = ['core', item[0]]
                         }
+                        console.log(item)
                         var index = Object.keys($scope.methods_toc).indexOf(item[0]);
                         if (index == -1) {
                             $scope.methods_toc[item[0]] = [item[1]]
@@ -31,17 +32,27 @@ angular.module('controllers', ['mgcrea.ngStrap'])
 
         });
         $scope.getCurl = function (method) {
-            return 'curl -X POST -H Content-Type:application/json' +
-                ' -d \'{\n  "method": "core.' + method + '",\n  ' +
-                '"jsonrpc": "2.0",\n  "id": 1\n}\' ' +
-                document.location.origin + '/mopidy/rpc';
+            var cmd = {
+                "method": 'core.' + method,
+                "jsonrpc": "2.0",
+                "params": $scope.getParams(method),
+                "id": 1
+            }
+            return 'curl -X POST -H Content-Type:application/json'
+                + ' -d \'' + JSON.stringify(cmd, null, 2) + '\' '
+                + document.location.origin + '/mopidy/rpc';
         }
         $scope.getParams = function (method) {
-            return $scope.getIt(method, 'params').map(function (item) {
-                return item.name;
-            }).join(', ');
+            var param = {};
+            $scope.getIt(method, 'params').map(function (item) {
+                if(item.name != "kwargs"){
+                    param[item.name]= null;
+                }
+            });
+            return param;
         }
         $scope.getIt = function (method, key) {
+            var method = method.replace("core.", "")
             var val = $scope.methods["core." + method][key];
             return val || 'Missing';
         }
@@ -50,31 +61,7 @@ angular.module('controllers', ['mgcrea.ngStrap'])
             if (!input) {
                 return '';
             }
-            var text = input.
-                    replace(/&/g, '&amp;').
-                    replace(/</g, '&lt;').
-                    replace(/>/g, '&gt;').
-                    replace(/'/g, '&#39;').
-                    replace(/"/g, '&quot;').
-                    replace(/``(\S+)``/g, "<b>$1</b>").
-                    replace(/:param (\w+) (\w+):/g, "<b title=\"$1\">$2</b>").
-                    replace(/:param (\w+):/g, "<b>$1</b>").
-                    replace(/:attr:`(\w+)`/g, "<b>$1</b>").
-                    replace(/:meth:`([~\.\w]+)\(?\)?`/g, "<code title='method'>$1</code>").
-                    replace(/    (.+)/g, "<pre>$1</pre>").replace(/<\/pre>(\s?)+<pre>/gim, "\n").
-                    replace(/:type (\w+): (\w+)/g, "<i title=\"$2\">(type)</i>").
-                    replace(/:type (\w+):/g, "<i title=\"$1\">($1)</i>").
-                    replace(/:class:`([~\.\w]+)`/g, "<code title=\"class\">$1</code>").
-                    replace(/``\[\\([\[\\]:\.\w]+)\]``/g, "<b>$1</b>").
-                    replace(/:rtype: (\w+)/g, "<i>$1</i>").
-                    replace(/:rtype:/g, "return")
-                ;
-
-            var output = '';
-            angular.forEach(text.split("\n\n"), function (paragraph, key) {
-                output += '<p>' + paragraph + '</p>';
-            });
-            return $sce.trustAsHtml(output);
+            return $sce.trustAsHtml(input);
         };
     }]);
 var ws = new WebSocket("ws://" + document.location.host + "/mopidy/ws/");
