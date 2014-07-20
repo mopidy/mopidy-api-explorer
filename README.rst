@@ -10,13 +10,9 @@ Mopidy-API-Explorer
     :target: https://pypi.python.org/pypi/Mopidy-API-Explorer/
     :alt: Number of PyPI downloads
 
-.. image:: https://travis-ci.org/dz0ny/Mopidy-API-Explorer.png?branch=master
-    :target: https://travis-ci.org/dz0ny/Mopidy-API-Explorer
-    :alt: Travis CI build status
-
 `Mopidy <http://www.mopidy.com/>`_ extension which lets you explore HTTP API.
 
-.. image:: http://drp.io/files/53a9ad93c2534.png
+.. image:: http://drp.io/files/53cb6d4100143.png
 
 
 Installation

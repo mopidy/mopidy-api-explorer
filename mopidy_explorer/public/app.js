@@ -3,7 +3,7 @@ angular.module('api', [
 ]);
 angular.module('controllers', ['mgcrea.ngStrap'])
     .controller('MainCtrl', function ($scope) {
-        var mopidy = new Mopidy({callingConvention: "by-position-or-by-name"});
+        window.mopidy = new Mopidy({callingConvention: "by-position-or-by-name"});
         $scope.methods_toc = {}
         mopidy.on("state:online", function () {
             mopidy._send({method: "core.describe"}).then(function (data) {
@@ -31,8 +31,12 @@ angular.module('controllers', ['mgcrea.ngStrap'])
 
         });
         $scope.getCurl = function (method) {
+            var _method = method;
+            if (method.indexOf('core.') ==-1){
+                _method = 'core.' +method;
+            }
             var cmd = {
-                "method": 'core.' + method,
+                "method": _method,
                 "jsonrpc": "2.0",
                 "params": $scope.getParams(method),
                 "id": 1
@@ -43,7 +47,11 @@ angular.module('controllers', ['mgcrea.ngStrap'])
         }
         $scope.getJS = function (method) {
             var cmd = $scope.getParams(method);
-            return 'mopidy.' +$scope._snakeToCamel(method) + '(' +JSON.stringify(cmd, null, 0) +');';
+            return 'mopidy.' +$scope._snakeToCamel(method.replace('core.', ''))
+                + '(' +JSON.stringify(cmd, null, 0) +').then('
+                + 'function(data){\n'
+                + '  console.log(data);\n'
+                + '});'
         }
         $scope._snakeToCamel = function (name) {
             return name.replace(/(_[a-z])/g, function (match) {
