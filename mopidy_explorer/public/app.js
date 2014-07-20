@@ -18,7 +18,6 @@ angular.module('controllers', ['mgcrea.ngStrap'])
                         if (item.length == 1) {
                             item = ['core', item[0]]
                         }
-                        console.log(item)
                         var index = Object.keys($scope.methods_toc).indexOf(item[0]);
                         if (index == -1) {
                             $scope.methods_toc[item[0]] = [item[1]]
@@ -37,11 +36,20 @@ angular.module('controllers', ['mgcrea.ngStrap'])
                 "jsonrpc": "2.0",
                 "params": $scope.getParams(method),
                 "id": 1
-            }
+            };
             return 'curl -X POST -H Content-Type:application/json'
                 + ' -d \'' + JSON.stringify(cmd, null, 2) + '\' '
                 + document.location.origin + '/mopidy/rpc';
         }
+        $scope.getJS = function (method) {
+            var cmd = $scope.getParams(method);
+            return 'mopidy.' +$scope._snakeToCamel(method) + '(' +JSON.stringify(cmd, null, 0) +');';
+        }
+        $scope._snakeToCamel = function (name) {
+            return name.replace(/(_[a-z])/g, function (match) {
+                return match.toUpperCase().replace("_", "");
+            });
+        };
         $scope.getParams = function (method) {
             var param = {};
             $scope.getIt(method, 'params').map(function (item) {

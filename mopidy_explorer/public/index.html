@@ -124,7 +124,8 @@
                             <ul class="nav" ng-repeat="method in methods">
                                 <li>
                                     <a
-                                            target="_self" ng-href="#{{class}}.{{method}}">{{method}}</a>
+                                            target="_self"
+                                            ng-href="#{{class}}.{{_snakeToCamel(method)}}">{{_snakeToCamel(method)}}</a>
                                 </li>
                             </ul>
                         </li>
@@ -171,10 +172,12 @@ var mopidy = new Mopidy({
                     <h3>{{class}}</h3>
 
                     <div ng-repeat="method in methods">
-                        <h4 id="{{class}}.{{method}}"><a ng-href="#{{class}}.{{method}}">instance.{{class}}.{{method}}</a>
+                        <h4 id="{{class}}.{{method}}"><a ng-href="#{{class}}.{{method}}">instance.{{class}}.{{_snakeToCamel(method)}}</a>
                         </h4>
                         <h5>cURL</h5>
                         <pre>{{getCurl(class+'.'+method)}}</pre>
+                        <h5>JavaScript</h5>
+                        <pre>{{getJS(class+'.'+method)}}</pre>
                         <h5>Python documentation</h5>
                         <pre
                                 ng-bind-html="getIt(class+'.'+method, 'description') | htmlify"></pre>
