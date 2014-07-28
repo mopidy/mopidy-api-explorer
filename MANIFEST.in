@@ -7,4 +7,4 @@ include README.rst
 include mopidy_explorer/ext.conf
 
 recursive-include tests *.py
-recursive-include mopidy_explorer/public *.py
+recursive-include mopidy_explorer/public *
