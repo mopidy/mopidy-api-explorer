@@ -1,6 +1,7 @@
-**********
+*******************
 Mopidy-API-Explorer
-**********
+*******************
+
 
 .. image:: https://pypip.in/v/Mopidy-API-Explorer/badge.png
     :target: https://pypi.python.org/pypi/Mopidy-API-Explorer/
