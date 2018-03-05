@@ -3,11 +3,11 @@ Mopidy-API-Explorer
 *******************
 
 
-.. image:: https://pypip.in/v/Mopidy-API-Explorer/badge.png
+.. image:: https://img.shields.io/pypi/v/Mopidy-API-Explorer.svg
     :target: https://pypi.python.org/pypi/Mopidy-API-Explorer/
     :alt: Latest PyPI version
 
-.. image:: https://pypip.in/d/Mopidy-API-Explorer/badge.png
+.. image:: https://img.shields.io/pypi/dm/Mopidy-API-Explorer.svg
     :target: https://pypi.python.org/pypi/Mopidy-API-Explorer/
     :alt: Number of PyPI downloads
 
