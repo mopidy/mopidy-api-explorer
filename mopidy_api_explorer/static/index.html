@@ -4,126 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mopidy API Explorer</title>
-    <link href="css/vendor/bootswatch-yeti-v3.4.1.min.css" rel="stylesheet">
-    <style>
-        body {
-            position: relative;
-            margin-top: 50px;
-        }
-
-        .method-outline {
-            margin-bottom: 40px;
-        }
-
-        .bs-sidenav {
-            margin-top: 50px;
-            margin-bottom: 20px;
-            width: 180px;
-        }
-
-        .bs-sidebar .nav > li > a {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: #999;
-            padding: 4px 15px;
-            text-align: right;
-        }
-
-        .bs-sidebar .nav > li > a:focus,
-        .bs-sidebar .nav > li > a:hover {
-            color: #5980b9;
-            text-decoration: none;
-            background-color: transparent;
-            border-right: 1px solid #5980b9;
-        }
-
-        .bs-sidebar .nav > .active:focus > a,
-        .bs-sidebar .nav > .active:hover > a,
-        .bs-sidebar .nav > .active > a {
-            font-weight: 700;
-            color: #5980b9;
-            background-color: transparent;
-            border-right: 2px solid #5980b9;
-        }
-
-        .bs-sidebar .nav .nav {
-            display: none;
-        }
-
-        .bs-sidebar .nav .nav > li > a {
-            padding-top: 2px;
-            padding-bottom: 2px;
-            font-size: 12px;
-            font-weight: 400;
-        }
-
-        .bs-sidebar .nav .nav > .active:focus > a,
-        .bs-sidebar .nav .nav > .active:hover > a,
-        .bs-sidebar .nav .nav > .active > a {
-            font-weight: 500;
-        }
-
-        @media (min-width: 992px) {
-            .bs-sidebar .nav > .active > ul {
-                display: block;
-            }
-
-            .bs-sidebar.affix .bs-sidenav,
-            .bs-sidebar.affix-bottom .bs-sidenav {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
-        }
-
-        #ws-console {
-            min-height: 300px;
-            max-height: 500px;
-            overflow-y: scroll;
-        }
-    </style>
+    <link href="css/vendor/bootstrap-v5.0.0-beta1.min.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
 </head>
-<body ng-app="api" data-spy="scroll" data-target=".bs-sidebar" data-offset="180">
+<body data-bs-spy="scroll" data-bs-target="#toc-container" data-bs-offset="0">
 
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Mopidy API Explorer</a>
-        </div>
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li><a data-match-route="api" target="_self" href="#api">Methods</a></li>
-                <li><a data-match-route="events" target="_self" href="#events">Events</a></li>
-                <li><a data-match-route="documentation" target="_self" href="#documentation">Documentation</a></li>
+<header class="navbar navbar-expand-lg navbar-light bg-primary sticky-top">
+    <nav class="container flex-wrap flex-lg-nowrap" aria-label="Navigation">
+        <a class="navbar-brand" href="#">Mopidy API Explorer</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-contents" aria-controls="navbar-contents" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbar-contents" class="collapse navbar-collapse">
+            <ul class="navbar-nav flex-row flex-wrap pt-2 py-lg-0">
+                <li class="nav-item col-12 col-lg-auto">
+                    <a href="#api" class="nav-link">Methods</a>
+                </li>
+                <li class="nav-item col-12 col-lg-auto">
+                    <a href="#events" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item col-12 col-lg-auto">
+                    <a href="#documentation" class="nav-link">Documentation</a>
+                </li>
             </ul>
         </div>
-    </div>
-</nav>
+    </nav>
+</header>
 
-<div class="container" ng-controller="MainCtrl">
+<div class="container my-md-4">
     <div class="row">
-        <div class="col-md-3" role="complementary">
-            <nav class="bs-sidebar hidden-print hidden-sm hidden-xs" data-spy="affix" data-offset-top="-100">
-                <ul class="nav bs-sidenav">
-                    <li data-target="#class-{{class}}"
-                        ng-repeat="(class, methods) in methods_toc">
-                        <a target="_self" ng-href="#class-{{class}}">{{class}}</a>
-                        <ul class="nav">
-                            <li ng-repeat="method in methods" data-target="#method-{{class}}.{{method}}">
-                                <a target="_self" ng-href="#method-{{class}}.{{method}}">{{_snakeToCamel(method)}}</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <div class="col-md-9">
+        <aside class="col-lg-3 d-none d-lg-block d-print-none">
+            <nav id="toc-container" class="navbar navbar-light bg-light"></nav>
+        </aside>
+        <main class="col-12 col-lg-9">
             <div class="box">
                 <h1>WebSocket endpoint</h1>
 
@@ -159,24 +72,7 @@ var mopidy = new Mopidy({
     callingConvention: "by-position-or-by-name"
 });</pre>
                 <h2>API Methods</h2>
-                <section id="class-{{class}}" ng-repeat="(class, methods) in methods_toc">
-                    <h3>{{class}}</h3>
-
-                    <div class="method-outline" ng-repeat="method in methods">
-                        <h4 id="method-{{class}}.{{method}}">
-                            <a ng-href="#method-{{class}}.{{method}}">instance.{{class}}.{{_snakeToCamel(method)}}</a>
-                        </h4>
-
-                        <h5>cURL</h5>
-                        <pre>{{getCurl(class+'.'+method)}}</pre>
-
-                        <h5>JavaScript</h5>
-                        <pre>{{getJS(class+'.'+method)}}</pre>
-
-                        <h5>Python documentation</h5>
-                        <pre ng-bind-html="getIt(class + '.' + method, 'description') | htmlify"></pre>
-                    </div>
-                </section>
+                <div id="api-methods-list"></div>
             </div>
 
             <div id="events" class="box">
@@ -197,18 +93,61 @@ var mopidy = new Mopidy({
                     <a href="https://docs.mopidy.com/" target="_blank" rel="noopener">docs.mopidy.com</a>.
                 </p>
             </div>
-        </div>
+        </main>
     </div>
 </div>
 
-<script src="js/vendor/mopidy-v1.2.1.min.js" type="text/javascript"></script>
-<script src="js/vendor/jquery-v2.2.4.min.js"></script>
-<script src="js/vendor/bootstrap-v3.4.1.min.js"></script>
-<script src="js/vendor/angular-v1.3.0.min.js" type="text/javascript"></script>
-<script src="js/vendor/angular-sanitize-v1.3.0.min.js" type="text/javascript"></script>
+<script type="text/x-html-template" id="toc-template">
+<nav class="nav nav-pills flex-column">
+    {{#each toc}}
+    <a href="#class-{{apiClass}}" class="nav-link mb-1">{{apiClass}}</a>
+    <nav class="nav nav-pills flex-column">
+        {{#each classMethods}}
+        <a href="#method-{{../apiClass}}-{{this}}" class="nav-link ms-3 my-0 py-0">{{snakeToCamel this}}</a>
+        {{/each}}
+    </nav>
+    {{/each}}
+</nav>
+</script>
 
-<script src="js/vendor/angular-strap-v2.3.12.min.js" type="text/javascript"></script>
-<script src="js/vendor/angular-strap-v2.3.12.tpl.min.js" type="text/javascript"></script>
+<script type="text/x-html-template" id="body-template">
+{{#each toc}}
+<section id="class-{{apiClass}}">
+    <h3>{{apiClass}}</h3>
+
+    {{#each classMethods}}
+    <div class="method-outline">
+        <h4 id="method-{{../apiClass}}-{{this}}">
+            <a href="#method-{{../apiClass}}-{{this}}">instance.{{../apiClass}}.{{snakeToCamel this}}</a>
+        </h4>
+
+        <h5>cURL</h5>
+        <div class="mb-3 p-2 border rounded">
+            <pre>{{apiMethodCurlCall (lookup @root.methodsData (concat ../apiClass "." this))}}</pre>
+        </div>
+
+        <h5>JavaScript</h5>
+        <div class="mb-3 p-2 border rounded">
+            <pre>{{apiMethodJsCall (lookup @root.methodsData (concat ../apiClass "." this))}}</pre>
+        </div>
+
+        <h5>Python documentation</h5>
+        {{#with (lookup @root.methodsData (concat ../apiClass "." this))}}
+        <div class="mb-3 p-2 border rounded">
+            <pre>{{this.methodData.description}}</pre>
+        </div>
+        {{/with}}
+    </div>
+    {{/each}}
+</section>
+{{/each}}
+</script>
+
+<script src="js/vendor/mopidy-v1.2.1.min.js" type="text/javascript"></script>
+<script src="js/vendor/bootstrap-v5.0.0-beta1.min.js" type="text/javascript"></script>
+<script src="js/vendor/handlebars-v4.7.6.min.js" type="text/javascript"></script>
+
 <script src="js/app.js" type="text/javascript"></script>
+
 </body>
 </html>

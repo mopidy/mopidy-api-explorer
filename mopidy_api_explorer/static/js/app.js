@@ -1,92 +1,181 @@
-angular.module('api', [
-    'controllers',
-]);
-angular.module('controllers', ['mgcrea.ngStrap'])
-    .controller('MainCtrl', function ($scope) {
-        window.mopidy = new Mopidy({callingConvention: "by-position-or-by-name"});
+function scrollParentToChild(parent, child) {
+    // Where is the parent on page
+    var parentRect = parent.getBoundingClientRect();
+    // What can you see?
+    var parentViewableArea = {
+        height: parent.clientHeight,
+        width: parent.clientWidth,
+    };
 
-        var console = document.getElementById('ws-console');
-        window.mopidy.on('websocket:incomingMessage', function (message) {
-            var newLine = (new Date()).toLocaleTimeString() + ': ' + message.data + "\n";
-            console.innerHTML = newLine + console.innerHTML;
-        });
+    // Where is the child
+    var childRect = child.getBoundingClientRect();
+    // Is the child viewable?
+    var isViewable = (childRect.top >= parentRect.top) && (childRect.top <= parentRect.top + parentViewableArea.height);
 
-        $scope.methods_toc = {};
-        window.mopidy.on("state:online", function () {
-            window.mopidy._send({method: "core.describe"}).then(function (data) {
-                window.a = data;
-                $scope.$apply(function () {
-                    $scope.methods = data;
-                    var methodsKeys = Object.keys(data).map(function (item) {
-                        return String(item).replace("core.", "");
-                    }).sort();
-                    methodsKeys.forEach(function (item) {
-                        item = item.split(".");
-                        if (item.length == 1) {
-                            item = ['core', item[0]];
-                        }
-                        var index = Object.keys($scope.methods_toc).indexOf(item[0]);
-                        if (index === -1) {
-                            $scope.methods_toc[item[0]] = [item[1]];
-                        } else {
-                            $scope.methods_toc[item[0]].push(item[1]);
-                        }
-                    });
-                });
-            });
-        });
-
-        $scope.getCurl = function (method) {
-            var _method = method;
-            if (method.indexOf('core.') === -1) {
-                _method = 'core.' + method;
-            }
-            var cmd = {
-                "method": _method,
-                "jsonrpc": "2.0",
-                "params": $scope.getParams(method),
-                "id": 1,
-            };
-            return 'curl -X POST -H Content-Type:application/json'
-                + ' -d \'' + JSON.stringify(cmd, null, 2) + '\' '
-                + document.location.origin + '/mopidy/rpc';
-        }
-
-        $scope.getJS = function (method) {
-            var cmd = $scope.getParams(method);
-            return 'mopidy.' + $scope._snakeToCamel(method.replace('core.', ''))
-                + '(' + JSON.stringify(cmd, null, 0) +').then('
-                + 'function(data) {\n'
-                + '  console.log(data);\n'
-                + '});'
-        }
-
-        $scope._snakeToCamel = function (name) {
-            return name.replace(/(_[a-z])/g, function (match) {
-                return match.toUpperCase().replace("_", "");
-            });
+    // if you can't see the child try to scroll parent
+    if (!isViewable) {
+        // scroll by offset relative to parent
+        parent.scrollTop = (childRect.top + parent.scrollTop) - parentRect.top;
+    }
+}
+function debounce(func, wait) {
+    let timeout;
+    return function() {
+        const context = this, args = arguments;
+        const later = function() {
+            timeout = null;
+            func.apply(context, args);
         };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+};
 
-        $scope.getParams = function (method) {
-            var param = {};
-            $scope.getIt(method, 'params').map(function (item) {
-                if (item.name != "kwargs") {
-                    param[item.name]= null;
-                }
-            });
-            return param;
+function snakeToCamel(identifier) {
+    return identifier.replace(/(_[a-z])/g, function(match) {
+        return match.toUpperCase().replace("_", "");
+    });
+}
+
+Handlebars.registerHelper("snakeToCamel", function(identifier) {
+    return snakeToCamel(identifier);
+});
+Handlebars.registerHelper("concat", function() {
+    const values = Array.prototype.slice.call(arguments, 0, -1);
+    return values.join("");
+});
+
+Handlebars.registerHelper("apiMethodCurlCall", function(apiMethod) {
+    const cmd = {
+        method: apiMethod.methodName,
+        jsonrpc: "2.0",
+        params: apiMethod.methodData.params,
+        id: 1,
+    };
+    return "curl -X POST -H 'Content-Type: application/json'" +
+        ` -d '${JSON.stringify(cmd, null, 2)}' ` +
+        window.location.origin + "/mopidy/rpc";
+});
+Handlebars.registerHelper("apiMethodJsCall", function(apiMethod) {
+    return "mopidy." + snakeToCamel(apiMethod.methodName.replace("core.", "")) +
+        `(${JSON.stringify(apiMethod.methodData.params)}).then(` +
+        "function(data) {\n" +
+        "  console.log(data);\n" +
+        "});";
+});
+
+function prepareMopidyApiToc(describeData) {
+    const apiMethods = new Map();
+    const methodKeys = Object.keys(describeData).map(function(methodKey) {
+        return String(methodKey).replace("core.", "");
+    });
+    for (const methodKey of methodKeys) {
+        let [apiClass, classMethod] = methodKey.split(".");
+        if (!classMethod) {
+            classMethod = apiClass;
+            apiClass = "core";
         }
 
-        $scope.getIt = function (method, key) {
-            var method = method.replace("core.", "");
-            var val = $scope.methods["core." + method][key];
-            return val || 'Missing';
+        if (apiMethods.has(apiClass)) {
+            apiMethods.get(apiClass).push(classMethod);
+        } else {
+            apiMethods.set(apiClass, [classMethod]);
         }
-    }).filter('htmlify', ['$sce', function ($sce) {
-        return function (input) {
-            if (!input) {
-                return '';
+    }
+
+    const apiMethodsToc = [];
+    for (const [apiClass, classMethods] of apiMethods.entries()) {
+        apiMethodsToc.push({ apiClass, classMethods });
+    }
+    return apiMethodsToc;
+}
+
+function prepareMopidyApiMethodsData(describeData) {
+    const apiMethodsData = {};
+
+    for (const [apiMethod, apiMethodData] of Object.entries(describeData)) {
+        const params = {};
+        for (const param of apiMethodData.params) {
+            if (param["name"] === "kwargs") {
+                continue;
             }
-            return $sce.trustAsHtml(input);
+
+            if (param["default"] !== undefined) {
+                params[param["name"]] = param["default"];
+            } else {
+                params[param["name"]] = null;
+            }
+        }
+
+        let [_core, apiClass, classMethod] = apiMethod.split(".");
+        if (!classMethod) {
+            classMethod = apiClass;
+            apiClass = "core";
+        }
+
+        apiMethodsData[apiClass + "." + classMethod] = {
+            methodName: apiMethod,
+            methodData: {
+                description: apiMethodData.description,
+                params,
+            },
         };
-    }]);
+    }
+
+    return apiMethodsData;
+}
+
+(function() {
+    window.mopidy = new Mopidy({callingConvention: "by-position-or-by-name"});
+
+    const consoleEl = document.getElementById("ws-console");
+    window.mopidy.on("websocket:incomingMessage", function(message) {
+        const newLine = (new Date()).toLocaleTimeString() + ': ' + message.data + "\n";
+        consoleEl.innerHTML = Handlebars.escapeExpression(newLine) + consoleEl.innerHTML;
+    });
+
+    const tocTemplateHtml = document.getElementById("toc-template").innerHTML;
+    const bodyTemplateHtml = document.getElementById("body-template").innerHTML;
+
+    const tocTemplate = Handlebars.compile(tocTemplateHtml);
+    const bodyTemplate = Handlebars.compile(bodyTemplateHtml);
+
+    const tocContainer = document.getElementById("toc-container");
+    const apiMethodsList = document.getElementById("api-methods-list");
+
+    window.mopidy.on("state:online", function() {
+        window.mopidy._send({ method: "core.describe" }).then(function(data) {
+            window.mopidyDescribeData = data;
+
+            const toc = prepareMopidyApiToc(data);
+            const tocHtml = tocTemplate({ toc });
+
+            const methodsData = prepareMopidyApiMethodsData(data);
+            const bodyHtml = bodyTemplate({ toc, methodsData });
+
+            tocContainer.innerHTML = tocHtml;
+            apiMethodsList.innerHTML = bodyHtml;
+
+            setTimeout(function() {
+                const spyEl = document.querySelector("[data-bs-spy='scroll']");
+                bootstrap.ScrollSpy.getInstance(spyEl).refresh();
+            }, 500);
+        });
+    });
+})();
+
+(function() {
+    const tocContainer = document.getElementById("toc-container");
+
+    const debouncedScroller = debounce(
+        function(targetSelector) {
+            const tocLink = tocContainer.querySelector("[href='" + targetSelector + "']");
+            scrollParentToChild(tocLink.parentElement, tocLink);
+        },
+        300
+    );
+
+    window.addEventListener("activate.bs.scrollspy", function(ev) {
+        debouncedScroller(ev.relatedTarget);
+    });
+})();
