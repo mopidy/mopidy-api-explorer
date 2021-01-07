@@ -2,18 +2,11 @@
 Mopidy-API-Explorer
 *******************
 
-
-.. image:: https://pypip.in/v/Mopidy-API-Explorer/badge.png
-    :target: https://pypi.python.org/pypi/Mopidy-API-Explorer/
+.. image:: https://img.shields.io/pypi/v/Mopidy-API-Explorer.svg
+    :target: https://pypi.org/project/Mopidy-API-Explorer/
     :alt: Latest PyPI version
 
-.. image:: https://pypip.in/d/Mopidy-API-Explorer/badge.png
-    :target: https://pypi.python.org/pypi/Mopidy-API-Explorer/
-    :alt: Number of PyPI downloads
-
-`Mopidy <http://www.mopidy.com/>`_ extension which lets you explore HTTP API.
-
-.. image:: http://drp.io/files/53cb6d4100143.png
+`Mopidy <https://www.mopidy.com/>`_ extension which lets you explore HTTP API.
 
 
 Installation
