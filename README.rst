@@ -23,7 +23,7 @@ Or, if available, install the Debian/Ubuntu package from `apt.mopidy.com
 Usage
 =====
 
-#. Visit http://localhost:6680/api_explorer
+#. Visit http://localhost:6680/api_explorer/
 
 Project resources
 =================
@@ -36,7 +36,12 @@ Project resources
 Changelog
 =========
 
+v2.0.0 (2021-01-08)
+-------------------
+
+Rewrite for Mopidy 3 and Mopidy.j2 v1.2.1
+
 v1.0.0 (2014-05-02)
 -------------------
 
-- Initial release
+Initial release
