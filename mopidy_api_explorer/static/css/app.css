@@ -8,6 +8,10 @@ pre {
 #toc-container {
     position: sticky;
     top: 60px;
+    width: 100%;
+}
+#toc-container > .nav {
+    width: 100%;
 }
 #toc-container .nav .nav {
     display: none;
