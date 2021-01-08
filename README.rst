@@ -14,10 +14,7 @@ Installation
 
 Install by running::
 
-    pip install Mopidy-API-Explorer
-
-Or, if available, install the Debian/Ubuntu package from `apt.mopidy.com
-<http://apt.mopidy.com/>`_.
+    python3 -m pip install Mopidy-API-Explorer
 
 
 Usage
@@ -28,18 +25,18 @@ Usage
 Project resources
 =================
 
-- `Source code <https://github.com/dz0ny/Mopidy-API-Explorer>`_
-- `Issue tracker <https://github.com/dz0ny/Mopidy-API-Explorer/issues>`_
+- `Source code <https://github.com/mopidy/mopidy-api-explorer>`_
+- `Issue tracker <https://github.com/mopidy/mopidy-api-explorer/issues>`_
 - `Download development snapshot
-  <https://github.com/dz0ny/Mopidy-API-Explorer/archive/master.tar.gz#egg=Mopidy-API-Explorer-dev>`_
+  <https://github.com/mopidy/mopidy-api-explorer/archive/master.tar.gz#egg=Mopidy-API-Explorer-dev>`_
 
 Changelog
 =========
 
-v2.0.0 (2021-01-08)
+v2.0.0 (2021-01-09)
 -------------------
 
-Rewrite for Mopidy 3 and Mopidy.j2 v1.2.1
+Rewrite for Mopidy 3 and Mopidy.js v1.2.1
 
 v1.0.0 (2014-05-02)
 -------------------
