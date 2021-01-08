@@ -1,16 +1,17 @@
 function scrollParentToChild(parent, child) {
     // Where is the parent on page
-    var parentRect = parent.getBoundingClientRect();
+    const parentRect = parent.getBoundingClientRect();
     // What can you see?
-    var parentViewableArea = {
+    const parentViewableArea = {
         height: parent.clientHeight,
         width: parent.clientWidth,
     };
 
     // Where is the child
-    var childRect = child.getBoundingClientRect();
+    const childRect = child.getBoundingClientRect();
     // Is the child viewable?
-    var isViewable = (childRect.top >= parentRect.top) && (childRect.top <= parentRect.top + parentViewableArea.height);
+    const isViewable = (childRect.top >= parentRect.top) &&
+        (childRect.top <= parentRect.top + parentViewableArea.height);
 
     // if you can't see the child try to scroll parent
     if (!isViewable) {
