@@ -30,3 +30,8 @@ pre {
     height: 340px;
     overflow-y: scroll;
 }
+
+#api-methods-list > section,
+.method-outline > h4 {
+    scroll-margin-top: 60px;
+}
