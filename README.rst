@@ -20,7 +20,10 @@ Install by running::
 Usage
 =====
 
-#. Visit http://localhost:6680/api_explorer/
+Once the extension is installed Mopidy must be restarted to detect the
+extension. After restarting Mopidy, visit http://localhost:6680/api_explorer/
+to explore the Mopidy JSON-RPC API.
+
 
 Project resources
 =================
