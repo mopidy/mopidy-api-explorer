@@ -6,7 +6,7 @@ Mopidy-API-Explorer
     :target: https://pypi.org/project/Mopidy-API-Explorer/
     :alt: Latest PyPI version
 
-`Mopidy <https://www.mopidy.com/>`_ extension which lets you explore HTTP API.
+`Mopidy <https://www.mopidy.com/>`_ extension which lets you explore the JSON-RPC API.
 
 
 Installation
