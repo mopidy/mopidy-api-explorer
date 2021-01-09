@@ -1,0 +1,37 @@
+body {
+    position: relative;
+}
+pre {
+    margin-bottom: 0;
+}
+
+#toc-container {
+    position: sticky;
+    top: 60px;
+    width: 100%;
+}
+#toc-container > .nav {
+    width: 100%;
+}
+#toc-container .nav .nav {
+    display: none;
+}
+#toc-container .nav .nav-link.active + .nav {
+    display: block;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.method-outline {
+    margin-bottom: 40px;
+}
+
+#ws-console {
+    height: 340px;
+    overflow-y: scroll;
+}
+
+#api-methods-list > section,
+.method-outline > h4 {
+    scroll-margin-top: 60px;
+}

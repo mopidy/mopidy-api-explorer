@@ -1,10 +1,9 @@
-include .coveragerc
-include .mailmap
-include .travis.yml
+include *.py
+include *.rst
 include LICENSE
 include MANIFEST.in
-include README.rst
-include mopidy_explorer/ext.conf
+include pyproject.toml
 
-recursive-include tests *.py
-recursive-include mopidy_explorer/public *
+include mopidy_api_explorer/ext.conf
+
+recursive-include mopidy_api_explorer/static *
