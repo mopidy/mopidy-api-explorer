@@ -1,9 +1,7 @@
 import pathlib
 
 import pkg_resources
-
 from mopidy import config, ext
-
 
 __version__ = pkg_resources.get_distribution("Mopidy-API-Explorer").version
 __url__ = "https://github.com/dz0ny/mopidy-api-explorer"
