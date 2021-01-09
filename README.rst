@@ -29,16 +29,3 @@ Project resources
 - `Issue tracker <https://github.com/mopidy/mopidy-api-explorer/issues>`_
 - `Download development snapshot
   <https://github.com/mopidy/mopidy-api-explorer/archive/master.tar.gz#egg=Mopidy-API-Explorer-dev>`_
-
-Changelog
-=========
-
-v2.0.0 (2021-01-09)
--------------------
-
-Rewrite for Mopidy 3 and Mopidy.js v1.2.1
-
-v1.0.0 (2014-05-02)
--------------------
-
-Initial release
