@@ -6,6 +6,8 @@ include MANIFEST.in
 include pyproject.toml
 include tox.ini
 
+recursive-include .github *
+
 include mopidy_api_explorer/ext.conf
 
 recursive-include mopidy_api_explorer/static *
