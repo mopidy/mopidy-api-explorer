@@ -32,3 +32,11 @@ Project resources
 - `Issue tracker <https://github.com/mopidy/mopidy-api-explorer/issues>`_
 - `Download development snapshot
   <https://github.com/mopidy/mopidy-api-explorer/archive/master.tar.gz#egg=Mopidy-API-Explorer-dev>`_
+
+
+Credits
+=======
+
+- Original author: `Janes Troha <https://github.com/dz0ny>`_
+- Current maintainer: `Matthew Gamble <https://github.com/djmattyg007>`_
+- `Contributors <https://github.com/mopidy/mopidy-api-explorer/graphs/contributors>
