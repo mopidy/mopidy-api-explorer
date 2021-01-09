@@ -4,6 +4,7 @@ include .mailmap
 include LICENSE
 include MANIFEST.in
 include pyproject.toml
+include tox.ini
 
 include mopidy_api_explorer/ext.conf
 
