@@ -18,7 +18,7 @@
         <div id="navbar-contents" class="collapse navbar-collapse">
             <ul class="navbar-nav flex-row flex-wrap pt-2 py-lg-0">
                 <li class="nav-item col-12 col-lg-auto">
-                    <a href="#api" class="nav-link">Methods</a>
+                    <a href="#api-methods" class="nav-link">Methods</a>
                 </li>
                 <li class="nav-item col-12 col-lg-auto">
                     <a href="#events" class="nav-link">Events</a>
@@ -59,7 +59,7 @@
                 </p>
             </div>
 
-            <div id="api" class="box">
+            <div id="api-intro" class="box">
                 <h1>Javascript API</h1>
                 <p>
                     You can use JS library shipped with mopidy to access
@@ -68,11 +68,15 @@
                     However examples on this page initiate a connection using the following script:
                 </p>
                 <pre>window.mopidy = new Mopidy();</pre>
+            </div>
+
+            <div id="api-methods" class="box navbar-target">
                 <h2>API Methods</h2>
+
                 <div id="api-methods-list"></div>
             </div>
 
-            <div id="events" class="box">
+            <div id="events" class="box navbar-target">
                 <h2>Events</h2>
 
                 <p>Here you can see events arriving from Mopidy in real time:</p>
@@ -82,7 +86,7 @@
                 <p>Nothing to see? Try playing a track using your Mopidy client.</p>
             </div>
 
-            <div id="documentation" class="box focus">
+            <div id="documentation" class="box navbar-target">
                 <h2>Documentation</h2>
 
                 <p>

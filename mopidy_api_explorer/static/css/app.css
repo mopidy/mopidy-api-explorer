@@ -22,6 +22,10 @@ pre {
     overflow-y: auto;
 }
 
+.box {
+    margin-bottom: 25px;
+}
+
 .method-outline {
     margin-bottom: 40px;
 }
@@ -31,6 +35,7 @@ pre {
     overflow-y: scroll;
 }
 
+.navbar-target,
 #api-methods-list > section,
 .method-outline > h4 {
     scroll-margin-top: 60px;
