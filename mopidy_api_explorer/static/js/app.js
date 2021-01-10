@@ -127,7 +127,7 @@ function prepareMopidyApiMethodsData(describeData) {
 }
 
 (function() {
-    window.mopidy = new Mopidy({callingConvention: "by-position-or-by-name"});
+    window.mopidy = new Mopidy();
 
     const consoleEl = document.getElementById("ws-console");
     window.mopidy.on("websocket:incomingMessage", function(message) {
