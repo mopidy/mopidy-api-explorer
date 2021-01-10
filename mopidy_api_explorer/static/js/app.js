@@ -48,11 +48,14 @@ Handlebars.registerHelper("concat", function() {
 
 Handlebars.registerHelper("apiMethodCurlCall", function(apiMethod) {
     const cmd = {
-        method: apiMethod.methodName,
         jsonrpc: "2.0",
-        params: apiMethod.methodData.params,
         id: 1,
+        method: apiMethod.methodName,
     };
+    if (Object.keys(apiMethod.methodData.params).length > 0) {
+        cmd.params = apiMethod.methodData.params;
+    }
+
     return "curl -X POST -H 'Content-Type: application/json'" +
         ` -d '${JSON.stringify(cmd, null, 2)}' ` +
         window.location.origin + "/mopidy/rpc";
