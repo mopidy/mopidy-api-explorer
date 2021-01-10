@@ -58,11 +58,18 @@ Handlebars.registerHelper("apiMethodCurlCall", function(apiMethod) {
         window.location.origin + "/mopidy/rpc";
 });
 Handlebars.registerHelper("apiMethodJsCall", function(apiMethod) {
-    return "mopidy." + snakeToCamel(apiMethod.methodName.replace("core.", "")) +
-        `(${JSON.stringify(apiMethod.methodData.params)}).then(` +
-        "function(data) {\n" +
-        "  console.log(data);\n" +
-        "});";
+    let call = "mopidy." + snakeToCamel(apiMethod.methodName.replace("core.", ""));
+    if (Object.keys(apiMethod.methodData.params).length > 0) {
+        call += `(${JSON.stringify(apiMethod.methodData.params)})`;
+    } else {
+        call += "()";
+    }
+
+    call += ".then(function(data) {\n";
+    call += "  console.log(data);\n";
+    call += "});";
+
+    return call;
 });
 
 function prepareMopidyApiToc(describeData) {
