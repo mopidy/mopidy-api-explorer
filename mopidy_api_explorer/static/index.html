@@ -41,10 +41,11 @@
                 <h1>WebSocket endpoint</h1>
 
                 <p>
-                    Mopidy has a WebSocket endpoint at <code>/mopidy/ws</code>. You
-                    can use this end point to access Mopidy's full API, and to get
-                    notified about events happening in Mopidy
-                    <a href="https://docs.mopidy.com/en/develop/api/http/#websocket-api" target="_blank" rel="noopener">more info</a>.
+                    Mopidy has a WebSocket endpoint at <code>/mopidy/ws</code>.
+                    You can use this endpoint to access Mopidy's full API, and
+                    to get notified about events happening in Mopidy.
+                    <br>
+                    <a href="https://docs.mopidy.com/en/latest/api/http/#websocket-api" target="_blank" rel="noopener">More info</a>
                 </p>
             </div>
 
@@ -52,22 +53,31 @@
                 <h1>HTTP POST RPC endpoint</h1>
 
                 <p>
-                    Mopidy has a WebSocket endpoint at <code>/mopidy/rpc</code>. You
-                    can use this end point to access Mopidy's full API.
-                    However you can't listen to events via this endpoint
-                    <a href="https://docs.mopidy.com/en/develop/api/http/#http-post-api" target="_blank" rel="noopener">more info</a>.
+                    Mopidy has a non-WebSocket API endpoint at <code>/mopidy/rpc</code>.
+                    You can use this endpoint to access Mopidy's full API.
+                    While you can't listen to events via this endpoint, it
+                    doesn't require maintaining a persistent connection.
+                    <br>
+                    <a href="https://docs.mopidy.com/en/latest/api/http/#http-post-api" target="_blank" rel="noopener">More info</a>
                 </p>
             </div>
 
             <div id="api-intro" class="box">
-                <h1>Javascript API</h1>
+                <h1>JavaScript API</h1>
+
                 <p>
-                    You can use JS library shipped with mopidy to access
-                    full Mopidy API. For more info visit
-                    <a href="https://docs.mopidy.com/en/develop/api/js/" target="_blank" rel="noopener">mopidy.js</a> docs.
-                    However examples on this page initiate a connection using the following script:
+                    Mopidy.js is an official library that provides full access to the
+                    JSON-RPC API via the WebSocket endpoint. For Mopidy extensions, it
+                    will automatically connect to the WebSocket endpoint with no constructor
+                    arguments. The examples on this page initiate a connection using the
+                    following script:
                 </p>
-                <pre>window.mopidy = new Mopidy();</pre>
+                <div class="mb-3 p-2 border rounded">
+                    <pre>window.mopidy = new Mopidy();</pre>
+                </div>
+                <p>
+                    More info can be found at the <a href="https://docs.mopidy.com/en/latest/api/js/" target="_blank" rel="noopener">Mopidy.js documentation</a>
+                </p>
             </div>
 
             <div id="api-methods" class="box navbar-target">
