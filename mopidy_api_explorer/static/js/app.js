@@ -63,7 +63,8 @@ Handlebars.registerHelper("apiMethodCurlCall", function(apiMethod) {
 Handlebars.registerHelper("apiMethodJsCall", function(apiMethod) {
     let call = "mopidy." + snakeToCamel(apiMethod.methodName.replace("core.", ""));
     if (Object.keys(apiMethod.methodData.params).length > 0) {
-        call += `(${JSON.stringify(apiMethod.methodData.params)})`;
+        const paramsStr = JSON.stringify(apiMethod.methodData.params).replace(/":/g, '": ').replace(/,"/g, ', "');
+        call += `(${paramsStr})`;
     } else {
         call += "()";
     }
