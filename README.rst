@@ -6,7 +6,7 @@ Mopidy-API-Explorer
     :target: https://pypi.org/project/Mopidy-API-Explorer/
     :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/github/workflow/status/mopidy/mopidy-api-explorer/CI
+.. image:: https://img.shields.io/github/actions/workflow/status/mopidy/mopidy-api-explorer/ci.yml?branch=master
     :target: https://github.com/mopidy/mopidy-api-explorer/actions
     :alt: CI build status
 
